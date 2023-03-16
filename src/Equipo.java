@@ -3,7 +3,7 @@ public class Equipo {
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
-    String nombre;
-    String descripcion;
+    private String nombre;
+    private String descripcion;
 
 }

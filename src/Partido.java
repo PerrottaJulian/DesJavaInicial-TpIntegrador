@@ -12,10 +12,10 @@ public class Partido {
             setResultado(RESULTADO.EMPATE);
         }
     }
-    Equipo equipo1;
-    Equipo equipo2;
-    int goles_equipo1;
-    int goles_equipo2;
+    private Equipo equipo1;
+    private Equipo equipo2;
+    private int goles_equipo1;
+    private int goles_equipo2;
     public RESULTADO resultado;
 
     public void setResultado(RESULTADO resultado){
