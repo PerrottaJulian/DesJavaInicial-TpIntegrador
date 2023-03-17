@@ -6,7 +6,7 @@ public class Ronda {
         this.partidos = new Partido[]{partido1,partido2};
     }
     private int numero;
-    public Partido[] partidos;
+    private Partido[] partidos;
     public int puntos = 0;
 
 

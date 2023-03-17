@@ -21,4 +21,12 @@ public class Partido {
     public void setResultado(RESULTADO resultado){
         this.resultado = resultado;
     }
+
+    public Equipo getEquipo1() {
+        return equipo1;
+    }
+
+    public Equipo getEquipo2() {
+        return equipo2;
+    }
 }
