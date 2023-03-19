@@ -1,29 +1,39 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         //Prueba de funcionamiento Partido
-        Equipo argentina = new Equipo("Argentina", "El mejor pais del mundo");
-        Equipo arabia = new Equipo("Arabia Saudita", "Los odio");
+        Path path = Paths.get("resultados.csv");
+        BufferedReader bf = new BufferedReader(new FileReader(path.toFile()));
+        String linea = "";
 
-        Equipo polonia = new Equipo("Polonia", "Lewandowski y 10 mas");
-        Equipo mexico = new Equipo("Mexico", "Son malisimos");
+        ArrayList<Partido> partidos = new ArrayList<Partido>();
 
-        Partido partido = new Partido(argentina, arabia, 1,2);
-        Partido partido2 = new Partido(polonia, mexico, 0, 0);
+        while ((linea = bf.readLine()) != null){
+            String[] linea_array = linea.split(";");
+            Equipo equipo1 = new Equipo(linea_array[0]);
+            Equipo equipo2 = new Equipo(linea_array[3]);
 
-        Ronda ronda = new Ronda(1, partido, partido2);
+            Partido partido = new Partido(equipo1, equipo2, Integer.parseInt(linea_array[1]), Integer.parseInt(linea_array[2]));
+            partidos.add(partido);
+
+        }
+        Ronda ronda = new Ronda(1, partidos.get(0), partidos.get(1));
         VerRonda(ronda);
 
-        //Pronostico pronostico = new Pronostico(partido, argentina, RESULTADO.EMPATE);
-        //System.out.println(pronostico.puntos);
-        // aparte, obviamente integras los archivos
+
 
         System.out.println("Escribir solo ganador/perdedor/empate");
         for (int i = 0; i < ronda.getPartidos().length; i++) {
             System.out.println("Pronostico para: "+ronda.getPartidos()[i].getEquipo1().getNombre());
-            RESULTADO resultado_pronostico = PasarStringAResultado(scanner.nextLine());
+            RESULTADO resultado_pronostico = StringAResultado(scanner.nextLine());
             Pronostico pronostico = new Pronostico(ronda.getPartidos()[i],ronda.getPartidos()[i].getEquipo1(), resultado_pronostico);
             ronda.puntos += pronostico.puntos;
         }
@@ -37,7 +47,7 @@ public class Main {
         System.out.println("-------------------------------");
     }
 
-    public static RESULTADO PasarStringAResultado(String resultado){
+    public static RESULTADO StringAResultado(String resultado){
         resultado = resultado.toLowerCase();
         if (resultado.equals("ganador")){
             return RESULTADO.GANADOR;
