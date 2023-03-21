@@ -1,7 +1,6 @@
 public class Pronostico {
-    public Pronostico(Partido partido, Equipo equipo, RESULTADO resultado){
+    public Pronostico(Partido partido, RESULTADO resultado){
         this.partido = partido;
-        this.equipo = equipo;
         this.resultado = resultado;
         if (partido.resultado == this.resultado){
             puntos++;

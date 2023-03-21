@@ -4,24 +4,25 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         //Prueba de funcionamiento Partido
-        Path path = Paths.get("resultados.csv");
-        BufferedReader bf = new BufferedReader(new FileReader(path.toFile()));
+        //Path path = Paths.get("resultados.csv");
+        BufferedReader bf = new BufferedReader(new FileReader("resultados.csv"));
         String linea = "";
 
         ArrayList<Partido> partidos = new ArrayList<Partido>();
 
         while ((linea = bf.readLine()) != null){
-            String[] linea_array = linea.split(";");
-            Equipo equipo1 = new Equipo(linea_array[0]);
-            Equipo equipo2 = new Equipo(linea_array[3]);
+            String[] resultado = linea.split(";");
+            Equipo equipo1 = new Equipo(resultado[0]);
+            Equipo equipo2 = new Equipo(resultado[3]);
 
-            Partido partido = new Partido(equipo1, equipo2, Integer.parseInt(linea_array[1]), Integer.parseInt(linea_array[2]));
+            Partido partido = new Partido(equipo1, equipo2, Integer.parseInt(resultado[1]), Integer.parseInt(resultado[2]));
             partidos.add(partido);
 
         }
@@ -30,14 +31,48 @@ public class Main {
 
 
 
-        System.out.println("Escribir solo ganador/perdedor/empate");
+        /*System.out.println("Escribir solo ganador/perdedor/empate");
         for (int i = 0; i < ronda.getPartidos().length; i++) {
             System.out.println("Pronostico para: "+ronda.getPartidos()[i].getEquipo1().getNombre());
             RESULTADO resultado_pronostico = StringAResultado(scanner.nextLine());
             Pronostico pronostico = new Pronostico(ronda.getPartidos()[i],ronda.getPartidos()[i].getEquipo1(), resultado_pronostico);
             ronda.puntos += pronostico.puntos;
         }
+        System.out.println("Puntos de la ronda: " + ronda.puntos);*/
+
+        BufferedReader bf2 = new BufferedReader(new FileReader("pronostico.csv"));
+
+        ArrayList<RESULTADO> resultados = new ArrayList<RESULTADO>();
+        while ((linea = bf2.readLine()) != null){
+            RESULTADO resultado = null;
+            String[] pronostico = linea.split(";");
+            for (int i = 0; i < pronostico.length; i++) {
+                if (pronostico[i].equals("x")){
+                    switch (i){
+                        case 1:
+                            resultado = RESULTADO.GANADOR;
+                            break;
+                        case 2:
+                            resultado = RESULTADO.EMPATE;
+                            break;
+                        case 3:
+                            resultado = RESULTADO.PERDEDOR;
+                            break;
+
+                    }
+                }
+            }
+            resultados.add(resultado);
+        }
+
+        for (int i = 0; i < ronda.getPartidos().length; i++) {
+            Pronostico miPronostico = new Pronostico(ronda.getPartidos()[i], resultados.get(i));
+            ronda.puntos += miPronostico.puntos;
+        }
         System.out.println("Puntos de la ronda: " + ronda.puntos);
+
+
+
     }
 
     public static void VerRonda(Ronda ronda){//no es importante, es solo visual
