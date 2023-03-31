@@ -1,32 +1,31 @@
 public class Partido {
-    public Partido(Equipo equipo1, Equipo equipo2, int goles_equipo1, int goles_equipo2){
-        this.equipo1 = equipo1;
-        this.equipo2 = equipo2;
-        this.goles_equipo1 = goles_equipo1;
-        this.goles_equipo2 = goles_equipo2;
-        if (goles_equipo1 > goles_equipo2){
-            setResultado(RESULTADO.GANADOR);
-        }else if(goles_equipo1 < goles_equipo2){
-            setResultado(RESULTADO.PERDEDOR);
+    public Partido(Equipo local, Equipo visitante, int goles_local, int goles_visitante){
+        this.local = local;
+        this.visitante = visitante;
+        this.goles_local = goles_local;
+        this.goles_visitante = goles_visitante;
+        if (goles_local > goles_visitante){
+            setResultado(RESULTADO.GANADOR_LOCAL);
+        }else if(goles_local < goles_visitante){
+            setResultado(RESULTADO.GANADOR_VISITANTE);
         }else{
             setResultado(RESULTADO.EMPATE);
         }
     }
-    private Equipo equipo1;
-    private Equipo equipo2;
-    private int goles_equipo1;
-    private int goles_equipo2;
+    private Equipo local;
+    private Equipo visitante;
+    private int goles_local;
+    private int goles_visitante;
     public RESULTADO resultado;
 
     public void setResultado(RESULTADO resultado){
         this.resultado = resultado;
     }
 
-    public Equipo getEquipo1() {
-        return equipo1;
+    public Equipo getLocal() {
+        return local;
     }
-
-    public Equipo getEquipo2() {
-        return equipo2;
+    public Equipo getVisitante() {
+        return visitante;
     }
 }

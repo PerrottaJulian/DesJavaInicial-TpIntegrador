@@ -1,6 +1,6 @@
 public enum RESULTADO {
-    GANADOR,
+    GANADOR_LOCAL,
     EMPATE,
-    PERDEDOR,
+    GANADOR_VISITANTE,
 
 }

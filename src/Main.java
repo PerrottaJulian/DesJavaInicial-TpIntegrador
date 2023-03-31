@@ -9,86 +9,83 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        //Prueba de funcionamiento Partido
-        //Path path = Paths.get("resultados.csv");
-        BufferedReader bf = new BufferedReader(new FileReader("resultados.csv"));
-        String linea = "";
+        ArrayList<Ronda> rondas = new ArrayList<Ronda>();
 
-        ArrayList<Partido> partidos = new ArrayList<Partido>();
-
-        while ((linea = bf.readLine()) != null){
-            String[] resultado = linea.split(";");
-            Equipo equipo1 = new Equipo(resultado[0]);
-            Equipo equipo2 = new Equipo(resultado[3]);
-
-            Partido partido = new Partido(equipo1, equipo2, Integer.parseInt(resultado[1]), Integer.parseInt(resultado[2]));
-            partidos.add(partido);
-
-        }
-        Ronda ronda = new Ronda(1, partidos.get(0), partidos.get(1));
+        Ronda ronda = crearRonda(1, new BufferedReader(new FileReader("resultados.csv")));
         VerRonda(ronda);
 
-
-
-        /*System.out.println("Escribir solo ganador/perdedor/empate");
-        for (int i = 0; i < ronda.getPartidos().length; i++) {
-            System.out.println("Pronostico para: "+ronda.getPartidos()[i].getEquipo1().getNombre());
-            RESULTADO resultado_pronostico = StringAResultado(scanner.nextLine());
-            Pronostico pronostico = new Pronostico(ronda.getPartidos()[i],ronda.getPartidos()[i].getEquipo1(), resultado_pronostico);
-            ronda.puntos += pronostico.puntos;
-        }
-        System.out.println("Puntos de la ronda: " + ronda.puntos);*/
-
-        BufferedReader bf2 = new BufferedReader(new FileReader("pronostico.csv"));
-
-        ArrayList<RESULTADO> resultados = new ArrayList<RESULTADO>();
-        while ((linea = bf2.readLine()) != null){
-            RESULTADO resultado = null;
-            String[] pronostico = linea.split(";");
-            for (int i = 0; i < pronostico.length; i++) {
-                if (pronostico[i].equals("x")){
-                    switch (i){
-                        case 1:
-                            resultado = RESULTADO.GANADOR;
-                            break;
-                        case 2:
-                            resultado = RESULTADO.EMPATE;
-                            break;
-                        case 3:
-                            resultado = RESULTADO.PERDEDOR;
-                            break;
-
-                    }
+        for (Partido partido : ronda.partidos){
+            BufferedReader bf_pronostico = new BufferedReader(new FileReader("pronostico.csv"));
+            String linea;
+            while ( (linea = bf_pronostico.readLine()) != null ){
+                if (linea.contains(partido.getLocal().getNombre())){
+                    break;
                 }
             }
-            resultados.add(resultado);
-        }
 
-        for (int i = 0; i < ronda.getPartidos().length; i++) {
+            Pronostico pronostico = new Pronostico(partido, setResultadoPronostico(linea));
+            ronda.puntos += pronostico.puntos;
+        }
+        System.out.println("Puntos de la ronda " + ronda.getNumero() + ": " + ronda.puntos);
+
+
+        /*for (int i = 0; i < ronda.getPartidos().length; i++) {
             Pronostico miPronostico = new Pronostico(ronda.getPartidos()[i], resultados.get(i));
             ronda.puntos += miPronostico.puntos;
         }
-        System.out.println("Puntos de la ronda: " + ronda.puntos);
-
-
+        System.out.println("Puntos de la ronda: " + ronda.puntos);*/
 
     }
 
-    public static void VerRonda(Ronda ronda){//no es importante, es solo visual
-        for (int i = 0; i < ronda.getPartidos().length; i++) {
-            System.out.println(ronda.getPartidos()[i].getEquipo1().getNombre()+" vs "+ronda.getPartidos()[i].getEquipo2().getNombre());
+    public static Ronda crearRonda(int n, BufferedReader bf) throws IOException{
+        Ronda ronda = new Ronda(n);
+
+        String linea = "";
+        while ((linea = bf.readLine()) != null){
+            String[] resultado = linea.split(";");
+            Equipo local = new Equipo(resultado[0]);
+            Equipo visitante = new Equipo(resultado[3]);
+            Partido partido = new Partido(local, visitante, Integer.parseInt(resultado[1]), Integer.parseInt(resultado[2]));
+            ronda.partidos.add(partido);
+        }
+        return ronda;
+    }
+
+
+    public static RESULTADO setResultadoPronostico (String linea) throws IOException {
+        RESULTADO resultado = null;
+        String[] pronostico = linea.split(";");
+        for (int i = 0; i < pronostico.length; i++) {
+            if (pronostico[i].equals("x")) {
+                switch (i) {
+                    case 1:
+                        resultado = RESULTADO.GANADOR_LOCAL;
+                        break;
+                    case 2:
+                        resultado = RESULTADO.EMPATE;
+                        break;
+                    case 3:
+                        resultado = RESULTADO.GANADOR_VISITANTE;
+                        break;
+
+                }
+            }
+        }
+        return resultado;
+    }
+
+
+
+
+
+    public static void VerRonda(Ronda ronda){//solo visual
+        System.out.println("Ronda " + ronda.getNumero());
+        for (Partido partido : ronda.partidos) {
+            System.out.println(partido.getLocal().getNombre() + " vs "+ partido.getVisitante().getNombre());
         }
         System.out.println("-------------------------------");
     }
 
-    public static RESULTADO StringAResultado(String resultado){
-        resultado = resultado.toLowerCase();
-        if (resultado.equals("ganador")){
-            return RESULTADO.GANADOR;
-        }else if(resultado.equals("perdedor")){
-            return RESULTADO.PERDEDOR;
-        }else {
-            return RESULTADO.EMPATE;}
-    }
+
+
 }
