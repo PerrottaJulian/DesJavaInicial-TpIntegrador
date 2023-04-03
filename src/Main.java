@@ -1,11 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -24,23 +20,18 @@ public class Main {
             }
 
             Pronostico pronostico = new Pronostico(partido, setResultadoPronostico(linea));
+            System.out.println("Pronostico para " + pronostico.getPartido().getLocal().getNombre() + " vs " +
+                    pronostico.getPartido().getVisitante().getNombre() + ": " + pronostico.getResultadoString());
             ronda.puntos += pronostico.puntos;
         }
+        System.out.println("-----------------------------");
         System.out.println("Puntos de la ronda " + ronda.getNumero() + ": " + ronda.puntos);
-
-
-        /*for (int i = 0; i < ronda.getPartidos().length; i++) {
-            Pronostico miPronostico = new Pronostico(ronda.getPartidos()[i], resultados.get(i));
-            ronda.puntos += miPronostico.puntos;
-        }
-        System.out.println("Puntos de la ronda: " + ronda.puntos);*/
-
     }
 
     public static Ronda crearRonda(int n, BufferedReader bf) throws IOException{
         Ronda ronda = new Ronda(n);
 
-        String linea = "";
+        String linea;
         while ((linea = bf.readLine()) != null){
             String[] resultado = linea.split(";");
             Equipo local = new Equipo(resultado[0]);
@@ -73,10 +64,6 @@ public class Main {
         }
         return resultado;
     }
-
-
-
-
 
     public static void VerRonda(Ronda ronda){//solo visual
         System.out.println("Ronda " + ronda.getNumero());

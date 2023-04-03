@@ -12,4 +12,17 @@ public class Pronostico {
     public int puntos = 0;
 
 
+    public Partido getPartido() {
+        return partido;
+    }
+
+    public String getResultadoString(){
+        if (resultado == RESULTADO.GANADOR_LOCAL){
+            return "Gana " + partido.getLocal().getNombre();
+        }else if(resultado == RESULTADO.GANADOR_VISITANTE){
+            return "Gana " + partido.getVisitante().getNombre();
+        }else{
+            return "Empate";
+        }
+    }
 }
