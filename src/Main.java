@@ -28,7 +28,7 @@ public class Main {
         }
         System.out.println("Puntos de la ronda " + ronda.getNumero() + ": " + ronda.puntos);
 
-
+        int i = 0;
         /*for (int i = 0; i < ronda.getPartidos().length; i++) {
             Pronostico miPronostico = new Pronostico(ronda.getPartidos()[i], resultados.get(i));
             ronda.puntos += miPronostico.puntos;
