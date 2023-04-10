@@ -1,10 +1,12 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
         ArrayList<Ronda> rondas = new ArrayList<Ronda>();
 
         Ronda ronda = crearRonda(1, new BufferedReader(new FileReader("resultados.csv")));
