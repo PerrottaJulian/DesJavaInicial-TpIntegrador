@@ -1,6 +1,24 @@
-Argentina;1;2;Arabia Saudita
-Polonia;0;0;Mexico
-Brasil;2;0;Japon
-Francia;2;0;Tunez
-España;0;2;Alemania
-Belgica;1;2;Croacia
+1;Qatar;0;2;Ecuador
+1;Senegal;0;2;Países Bajos
+1;Qatar;1;3;Senegal
+1;Países Bajos;1;1;Ecuador
+1;Ecuador;1;2;Senegal
+1;Países Bajos;2;0;Qatar
+2;Inglaterra;6;2;Irán
+2;Estados Unidos;1;1;Gales
+2;Gales;0;2;Irán
+2;Inglaterra;0;0;Estados Unidos
+2;Gales;0;3;Inglaterra
+2;Irán;0;1;Estados Unidos
+3;Argentina;1;2;Arabia Saudí
+3;México;0;0;Polonia
+3;Polonia;2;0;Arabia Saudí
+3;Argentina;2;0;México
+3;Polonia;0;2;Argentina
+3;Arabia Saudí;1;2;México
+4;Dinamarca;0;0;Túnez
+4;Francia;4;1;Australia
+4;Túnez;0;1;Australia
+4;Francia;2;1;Dinamarca
+4;Australia;1;0;Dinamarca
+4;Túnez;1;0;Francia
