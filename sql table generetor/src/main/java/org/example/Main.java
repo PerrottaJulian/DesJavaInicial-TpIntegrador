@@ -9,11 +9,11 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) throws SQLException, IOException {
         try {
-            /*Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/torneo", "root", "my.jperrotta123");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/torneo", "root", "my.jperrotta123");
             Statement stmt = con.createStatement();
 
 
-            ResultSet rs=stmt.executeQuery("SELECT * FROM actor WHERE first_name LIKE 'j%'");
+            /*ResultSet rs=stmt.executeQuery("SELECT * FROM actor WHERE first_name LIKE 'j%'");
             while(rs.next()) System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
 
             BufferedReader bf = new BufferedReader(new FileReader("resultados.csv"));
@@ -37,39 +37,45 @@ public class Main {
 
                 setPartido(stmt, id, ronda, local, goles_local, visitante, goles_visitante);
                 //System.out.println(getIDEquipo(stmt, linea));
-            }
-            BufferedReader bf = new BufferedReader(new FileReader("pronostico.csv"));
+            }*/
+            /*BufferedReader bf = new BufferedReader(new FileReader("pronostico.csv"));
             String[] participantes = new String[]{"JULIAN", "FLOR", "LUCIANO"};
-            String linea;
 
-            while ((linea = bf.readLine()) != null){
-                Random ran = new Random();
-                String[] pronostico = linea.split(" vs ");
-                String local = pronostico[0];
-                String visitante = pronostico[1];
-                int id = ran.nextInt(1000,10000);
+            for (String participante: participantes) {
+                String linea;
+                while ((linea = bf.readLine()) != null) {
+                    Random ran = new Random();
+                    String[] pronostico = linea.split(" vs ");
+                    String local = pronostico[0];
+                    String visitante = pronostico[1];
+                    int id = ran.nextInt(1000, 10000);
 
-                ResultSet partido = stmt.executeQuery("SELECT partido_id FROM partido WHERE local_id="+getIDEquipo(stmt, local)+" AND visitante_id="+getIDEquipo(stmt, visitante));
-                System.out.println(local+ " "+visitante);
-                int partido_id = 0;
-                while (partido.next()){partido_id = partido.getInt(1);}
+                    ResultSet partido = stmt.executeQuery("SELECT partido_id FROM partido WHERE local_id=" + getIDEquipo(stmt, local) + " AND visitante_id=" + getIDEquipo(stmt, visitante));
+                    System.out.println(local + " " + visitante);
+                    int partido_id = 0;
+                    while (partido.next()) {
+                        partido_id = partido.getInt(1);
+                    }
 
-                int aux = ran.nextInt(1,4);
-                switch (aux){
-                    case 1:
-                        stmt.execute("INSERT INTO pronostico " +
-                                "VALUES ( "+id+", 'julian', "+partido_id+", "+getIDEquipo(stmt, local)+")");
-                        break;
-                    case 2:
-                        stmt.execute("INSERT INTO pronostico " +
-                                "VALUES ( "+id+", 'julian', "+partido_id+", 0)");
-                        break;
-                    case 3:
-                        stmt.execute("INSERT INTO pronostico " +
-                                "VALUES ( "+id+", 'julian', "+partido_id+", "+getIDEquipo(stmt, visitante)+")");
-                        break;
+                    int aux = ran.nextInt(1, 4);
+                    switch (aux) {
+                        case 1:
+                            stmt.execute("INSERT INTO pronostico " +
+                                    "VALUES ( " + id + ", '"+participante+"', " + partido_id + ", " + getIDEquipo(stmt, local) + ")");
+                            break;
+                        case 2:
+                            stmt.execute("INSERT INTO pronostico " +
+                                    "VALUES ( " + id + ", '"+participante+"', " + partido_id + ", 0)");
+                            break;
+                        case 3:
+                            stmt.execute("INSERT INTO pronostico " +
+                                    "VALUES ( " + id + ", '"+participante+"', " + partido_id + ", " + getIDEquipo(stmt, visitante) + ")");
+                            break;
 
+                    }
                 }
+                System.out.println("-----------------------------------------------------------------");
+                bf = new BufferedReader(new FileReader("pronostico.csv"));
             }*/
 
         } catch (Exception e){
@@ -77,7 +83,7 @@ public class Main {
         }
     }
 
-    /*public static void setRonda(Statement statement, int n) throws SQLException {
+    public static void setRonda(Statement statement, int n) throws SQLException {
         statement.execute("INSERT INTO ronda\n"+
                 "VALUES("+n+", 'Ronda"+n+"')");
     }
@@ -93,6 +99,6 @@ public class Main {
     public static void setPartido(Statement statement, int id, int ronda_id, String local, int goles_local, String visitante, int goles_visitante) throws SQLException {
         statement.execute("INSERT INTO partido\n"+
                 "VALUES("+id+", "+ronda_id+", "+getIDEquipo(statement,local)+", "+goles_local+", "+getIDEquipo(statement,visitante)+", "+goles_visitante+")");
-    }*/
+    }
 
 }
