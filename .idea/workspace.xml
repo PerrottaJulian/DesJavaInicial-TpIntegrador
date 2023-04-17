@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4cd7dc8c-8c00-41ae-8754-fef4b1830541" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tp/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql table generetor/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/sql table generetor/src/main/java/org/example/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Equipo.java" beforeDir="false" afterPath="$PROJECT_DIR$/tp/src/main/java/org/example/Equipo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/tp/src/main/java/org/example/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Partido.java" beforeDir="false" afterPath="$PROJECT_DIR$/tp/src/main/java/org/example/Partido.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pronostico.java" beforeDir="false" afterPath="$PROJECT_DIR$/tp/src/main/java/org/example/Pronostico.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RESULTADO.java" beforeDir="false" afterPath="$PROJECT_DIR$/tp/src/main/java/org/example/RESULTADO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Ronda.java" beforeDir="false" afterPath="$PROJECT_DIR$/tp/src/main/java/org/example/Ronda.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tp/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/tp/src/main/java/org/example/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

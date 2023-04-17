@@ -1,50 +1,55 @@
 package org.example;
 
+import com.google.protobuf.Value;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.security.Key;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String[] participantes = new String[]{"JULIAN", "FLOR", "LUCIANO"};
+        String[] participantes = new String[]{"JULIAN", "FLOR", "LUCIANO"}; //lista de participantes que uso mas adelante
+
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/torneo", "root", "my.jperrotta123");
-            Statement stmt = con.createStatement();
-            Statement stmt_2 = con.createStatement();
-            Statement stmt_temp = con.createStatement();
+            Statement stmt = con.createStatement(); //creo conexion con la base de datos y el statement con el que podes acceder a los codigos SQL
+            Statement stmt_temp = con.createStatement(); //como tengo que usar statement y resulsets en algunas funciones y no puedo tener 2 resultsets a la vez creoq este que es temporal, y asi funciona bien
 
 
-            for (int i = 1; i <= getNRondas(stmt); i++) {
-                int ronda_id = i;
+            for (int i = 1; i <= getNRondas(stmt); i++) {//con getNRondas saco de la DB la cant de rondas que tengo (ahora 4)
+                int ronda_id = i; //saco el numero de ronda con el que filtrar (primero 1, dps 2, etc)
                 Ronda ronda = new Ronda(ronda_id, getNombreFromIdRonda(stmt_temp, ronda_id));
                 print(ronda.getNombre());
-                ResultSet rs = stmt.executeQuery("SELECT * FROM partido WHERE ronda_id = " + ronda_id);
+                ResultSet rs = stmt.executeQuery("SELECT * FROM partido WHERE ronda_id = " + ronda_id); //filtro todos los partidos que son de la ronda x
 
-                while(rs.next()){
+                while(rs.next()){ //lee cada linea del result set (que seria cada partido)
                     int partido_id = rs.getInt(1);
                     String local = getNombreFromIdEquipo(stmt_temp, rs.getInt(3));
                     String visitante = getNombreFromIdEquipo(stmt_temp,rs.getInt(5));
                     int goles_local = rs.getInt(4);
                     int goles_visitante = rs.getInt(6);
+                    //guardo todos los datos en variables para mejor uso
 
                     Partido partido = new Partido(new Equipo(local), new Equipo(visitante), goles_local, goles_visitante);
-                    print(local+" vs "+visitante+" -> "+ partido.resultado);
+                    print(local+" vs "+visitante+" -> "+ partido.resultado); //creo un objeto Partido con todos los datos sacados del RS
 
                     for (String participante: participantes){
                         RESULTADO resultado = null;
-                        int ganador_id = getIdGanador(stmt_temp, partido_id, participante );
+                        int ganador_id = getIdGanador(stmt_temp, partido_id, participante ); //filtro los pronosticos de cada participante de el partido actual (son 3 participantes entonces 3)
                         if (ganador_id == 0){
                             resultado = RESULTADO.EMPATE;
                         } else if (ganador_id == rs.getInt(3)) {
                             resultado = RESULTADO.GANADOR_LOCAL;
                         } else if (ganador_id == rs.getInt(5)) {
                             resultado = RESULTADO.GANADOR_VISITANTE;
-                        }
-                        Pronostico pronostico = new Pronostico(participante, partido, resultado);
-                        print(pronostico.getParticipante() + ": "+ pronostico.getResultadoString() +" puntos: " + pronostico.puntos);
+                        } // defino si el id del equipo que el participante eligio ganador es originalmente el local o visitante (o si es 0 empate) y defino un valor enum RESULTADO a una variable
+                        Pronostico pronostico = new Pronostico(participante, partido, resultado); //creo un objeto pronostico con el nombre del paticipante, el objeto partido del que estamos hablando y el enum resultado
+                        print(pronostico.getParticipante() + ": "+ pronostico.getResultadoString() +" puntos: " + pronostico.puntos); //muestro y veo si el participante acerto
                     }
-
-                    print("-------------------------------");
+                    print("-------------------------------"); // por ahora todo esto funciona perfecto
 
 
 
