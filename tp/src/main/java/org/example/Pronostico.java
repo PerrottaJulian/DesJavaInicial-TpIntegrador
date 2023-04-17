@@ -1,13 +1,16 @@
+package org.example;
+
 public class Pronostico {
-    public Pronostico(Partido partido, RESULTADO resultado){
+    public Pronostico(String participante, Partido partido, RESULTADO resultado){
+        this.participante = participante;
         this.partido = partido;
         this.resultado = resultado;
         if (partido.resultado == this.resultado){
             puntos++;
         }
     }
+    private String participante;
     private Partido partido;
-    private Equipo equipo;
     private RESULTADO resultado;
     public int puntos = 0;
 
@@ -24,5 +27,9 @@ public class Pronostico {
         }else{
             return "Empate";
         }
+    }
+
+    public String getParticipante() {
+        return participante;
     }
 }

@@ -1,3 +1,5 @@
+package org.example;
+
 public class Partido {
     public Partido(Equipo local, Equipo visitante, int goles_local, int goles_visitante){
         this.local = local;
