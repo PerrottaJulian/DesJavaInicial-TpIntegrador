@@ -12,14 +12,19 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) throws IOException {
         String[] participantes = new String[]{"JULIAN", "FLOR", "LUCIANO"}; //lista de participantes que uso mas adelante
+        HashMap<String, Integer> puntajes = new HashMap<>();// Coleccion en donde voy a guardar los puntajes totales de cada participante
+        for (String participante: participantes){
+            puntajes.put(participante, 0);// para inicializar el Map
+        }
 
+        //empieza proceso
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/torneo", "root", "my.jperrotta123");
             Statement stmt = con.createStatement(); //creo conexion con la base de datos y el statement con el que podes acceder a los codigos SQL
             Statement stmt_temp = con.createStatement(); //como tengo que usar statement y resulsets en algunas funciones y no puedo tener 2 resultsets a la vez creoq este que es temporal, y asi funciona bien
 
 
-            for (int i = 1; i <= getNRondas(stmt); i++) {//con getNRondas saco de la DB la cant de rondas que tengo (ahora 4)
+            for (int i = 1; i <= getNRondas(stmt); i++) {  //con getNRondas saco de la DB la cant de rondas que tengo (ahora 4)
                 int ronda_id = i; //saco el numero de ronda con el que filtrar (primero 1, dps 2, etc)
                 Ronda ronda = new Ronda(ronda_id, getNombreFromIdRonda(stmt_temp, ronda_id));
                 print(ronda.getNombre());
@@ -48,6 +53,9 @@ public class Main {
                         } // defino si el id del equipo que el participante eligio ganador es originalmente el local o visitante (o si es 0 empate) y defino un valor enum RESULTADO a una variable
                         Pronostico pronostico = new Pronostico(participante, partido, resultado); //creo un objeto pronostico con el nombre del paticipante, el objeto partido del que estamos hablando y el enum resultado
                         print(pronostico.getParticipante() + ": "+ pronostico.getResultadoString() +" puntos: " + pronostico.puntos); //muestro y veo si el participante acerto
+
+                        puntajes.replace(pronostico.getParticipante(), puntajes.get(pronostico.getParticipante()), puntajes.get(pronostico.getParticipante()) + pronostico.puntos);
+                        //aumento el valor de los puntos en el Map de puntajes, si acerto sumaria 1 y si no sumaria 0
                     }
                     print("-------------------------------"); // por ahora todo esto funciona perfecto
 
@@ -62,48 +70,9 @@ public class Main {
             System.out.println(e);
         }
 
-
-
-        /*ArrayList<Ronda> rondas = new ArrayList<Ronda>();
-
-        Ronda ronda = crearRonda(1, new BufferedReader(new FileReader("resultados.csv")));
-        VerRonda(ronda);
-
-        for (Partido partido : ronda.partidos){
-            BufferedReader bf_pronostico = new BufferedReader(new FileReader("pronostico.csv"));
-            String linea;
-            while ( (linea = bf_pronostico.readLine()) != null ){
-                if (linea.contains(partido.getLocal().getNombre())){
-                    break;
-                }
-            }
-
-            Pronostico pronostico = new Pronostico(partido, setResultadoPronostico(linea));
-            System.out.println("org.example.Pronostico para " + pronostico.getPartido().getLocal().getNombre() + " vs " +
-                    pronostico.getPartido().getVisitante().getNombre() + ": " + pronostico.getResultadoString());
-            ronda.puntos += pronostico.puntos;
-        }
-        System.out.println("-----------------------------");
-        System.out.println("Puntos de la ronda " + ronda.getNumero() + ": " + ronda.puntos);*/
-
+        print(""+puntajes); // tambien funciona bien :)
 
     } // FIN MAIN
-
-
-    /*public static Ronda crearRonda(int n, BufferedReader bf) throws IOException {
-        Ronda ronda = new Ronda(n);
-
-        String linea;
-        while ((linea = bf.readLine()) != null) {
-            String[] resultado = linea.split(";");
-            Equipo local = new Equipo(resultado[0]);
-            Equipo visitante = new Equipo(resultado[3]);
-            Partido partido = new Partido(local, visitante, Integer.parseInt(resultado[1]), Integer.parseInt(resultado[2]));
-            ronda.partidos.add(partido);
-        }
-        return ronda;
-    }*/
-
 
     public static RESULTADO setResultadoPronostico(String linea) throws IOException {
         RESULTADO resultado = null;
