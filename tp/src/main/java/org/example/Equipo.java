@@ -1,3 +1,5 @@
+package org.example;
+
 public class Equipo {
     public Equipo(String nombre){
         this.nombre = nombre;

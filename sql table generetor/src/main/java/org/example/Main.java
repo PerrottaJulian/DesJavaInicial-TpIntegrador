@@ -85,7 +85,7 @@ public class Main {
 
     public static void setRonda(Statement statement, int n) throws SQLException {
         statement.execute("INSERT INTO ronda\n"+
-                "VALUES("+n+", 'Ronda"+n+"')");
+                "VALUES("+n+", 'org.example.Ronda"+n+"')");
     }
 
     public static int getIDEquipo(Statement statement, String equipo) throws SQLException {
