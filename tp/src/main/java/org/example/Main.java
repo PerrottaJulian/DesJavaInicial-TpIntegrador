@@ -13,8 +13,10 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String[] participantes = new String[]{"JULIAN", "FLOR", "LUCIANO"}; //lista de participantes que uso mas adelante
         HashMap<String, Integer> puntajes = new HashMap<>();// Coleccion en donde voy a guardar los puntajes totales de cada participante
+        HashMap<String, Integer> aciertos = new HashMap<>();
         for (String participante: participantes){
-            puntajes.put(participante, 0);// para inicializar el Map
+            puntajes.put(participante, 0); // para inicializar el Map
+            aciertos.put(participante, 0);
         }
 
         //empieza proceso
@@ -56,21 +58,34 @@ public class Main {
 
                         puntajes.replace(pronostico.getParticipante(), puntajes.get(pronostico.getParticipante()), puntajes.get(pronostico.getParticipante()) + pronostico.puntos);
                         //aumento el valor de los puntos en el Map de puntajes, si acerto sumaria 1 y si no sumaria 0
+
+                        if (pronostico.puntos == 1){
+                            aciertos.replace(pronostico.getParticipante(), aciertos.get(pronostico.getParticipante()), aciertos.get(pronostico.getParticipante()) + 1);
+                        }
+
                     }
                     print("-------------------------------"); // por ahora todo esto funciona perfecto
+                }
+                print("\nAciertos "+aciertos);
+                print("*************************************************************");
 
-
-
+                for (String participante: participantes){ // suma un punto extra si el participante acerto todos los resultados de una ronda, cosa que pasa con LUCIANO en la Ronda3
+                    if (aciertos.get(participante) == 6){
+                        puntajes.replace(participante, puntajes.get(participante), puntajes.get(participante) + 1);
+                    }
                 }
 
-                print("*************************************************************");
+
+                for (String participante: participantes){
+                    aciertos.put(participante, 0); //inicializo devuelta aciertos
+                }
 
             }
         } catch (Exception e) {
             System.out.println(e);
         }
 
-        print(""+puntajes); // tambien funciona bien :)
+        print("Puntajes: "+puntajes); // tambien funciona bien :)
 
     } // FIN MAIN
 
