@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String[] participantes = new String[]{"JULIAN", "FLOR", "LUCIANO"}; //lista de participantes que uso mas adelante
         HashMap<String, Integer> puntajes = new HashMap<>();// Coleccion en donde voy a guardar los puntajes totales de cada participante
-        HashMap<String, Integer> aciertos = new HashMap<>();
+        HashMap<String, Integer> aciertos = new HashMap<>(); //aciertos me sirve para calcular si uno adivino todos los resultados de una ronda
         for (String participante: participantes){
             puntajes.put(participante, 0); // para inicializar el Map
             aciertos.put(participante, 0);
@@ -41,7 +41,7 @@ public class Main {
                     //guardo todos los datos en variables para mejor uso
 
                     Partido partido = new Partido(new Equipo(local), new Equipo(visitante), goles_local, goles_visitante);
-                    print(local+" vs "+visitante+" -> "+ partido.resultado); //creo un objeto Partido con todos los datos sacados del RS
+                    print(local+" vs "+visitante+" = "+ partido.resultado); //creo un objeto Partido con todos los datos sacados del RS
 
                     for (String participante: participantes){
                         RESULTADO resultado = null;
@@ -53,19 +53,21 @@ public class Main {
                         } else if (ganador_id == rs.getInt(5)) {
                             resultado = RESULTADO.GANADOR_VISITANTE;
                         } // defino si el id del equipo que el participante eligio ganador es originalmente el local o visitante (o si es 0 empate) y defino un valor enum RESULTADO a una variable
+
                         Pronostico pronostico = new Pronostico(participante, partido, resultado); //creo un objeto pronostico con el nombre del paticipante, el objeto partido del que estamos hablando y el enum resultado
-                        print(pronostico.getParticipante() + ": "+ pronostico.getResultadoString() +" puntos: " + pronostico.puntos); //muestro y veo si el participante acerto
+                        print(pronostico.getParticipante() + ": "+ pronostico.getResultadoString() +" -->> "+ pronostico.acierta); //muestro y veo si el participante acerto
 
-                        puntajes.replace(pronostico.getParticipante(), puntajes.get(pronostico.getParticipante()), puntajes.get(pronostico.getParticipante()) + pronostico.puntos);
-                        //aumento el valor de los puntos en el Map de puntajes, si acerto sumaria 1 y si no sumaria 0
 
-                        if (pronostico.puntos == 1){
+                        //aumento el valor de los puntos en los Map de puntajes y aciertos, si el resultado coincide
+                        if (pronostico.acierta){
                             aciertos.replace(pronostico.getParticipante(), aciertos.get(pronostico.getParticipante()), aciertos.get(pronostico.getParticipante()) + 1);
+                            puntajes.replace(pronostico.getParticipante(), puntajes.get(pronostico.getParticipante()), puntajes.get(pronostico.getParticipante()) + 1);
                         }
 
                     }
-                    print("-------------------------------"); // por ahora todo esto funciona perfecto
-                }
+                    print("-------------------------------");
+                }//(termina cada partido de la ronda)
+
                 print("\nAciertos "+aciertos);
                 print("*************************************************************");
 
@@ -80,12 +82,14 @@ public class Main {
                     aciertos.put(participante, 0); //inicializo devuelta aciertos
                 }
 
-            }
+            }//(termina la ronda)
+
+
         } catch (Exception e) {
             System.out.println(e);
         }
 
-        print("Puntajes: "+puntajes); // tambien funciona bien :)
+        print("Puntajes: "+puntajes); //
 
     } // FIN MAIN
 
