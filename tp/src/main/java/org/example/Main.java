@@ -6,26 +6,29 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.security.Key;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String[] participantes = new String[]{"JULIAN", "FLOR", "LUCIANO"}; //lista de participantes que uso mas adelante
-        HashMap<String, Integer> puntajes = new HashMap<>();// Coleccion en donde voy a guardar los puntajes totales de cada participante
-        HashMap<String, Integer> aciertos = new HashMap<>(); //aciertos me sirve para calcular si uno adivino todos los resultados de una ronda
-        for (String participante: participantes){
-            puntajes.put(participante, 0); // para inicializar el Map
-            aciertos.put(participante, 0);
-        }
+        ArrayList<String> participantes = new ArrayList<>();
 
-        //empieza proceso
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/torneo", "root", "my.jperrotta123");
             Statement stmt = con.createStatement(); //creo conexion con la base de datos y el statement con el que podes acceder a los codigos SQL
             Statement stmt_temp = con.createStatement(); //como tengo que usar statement y resulsets en algunas funciones y no puedo tener 2 resultsets a la vez creoq este que es temporal, y asi funciona bien
 
+            setParticipantesList(stmt, participantes); //saco a los participantes de la DB
 
+            HashMap<String, Integer> puntajes = new HashMap<>();// Coleccion en donde voy a guardar los puntajes totales de cada participante
+            HashMap<String, Integer> aciertos = new HashMap<>(); //aciertos me sirve para calcular si uno adivino todos los resultados de una ronda
+            for (String participante: participantes){
+                puntajes.put(participante, 0); // para inicializar el Map
+                aciertos.put(participante, 0);
+            }
+
+            // empieza la ronda
             for (int i = 1; i <= getNRondas(stmt); i++) {  //con getNRondas saco de la DB la cant de rondas que tengo (ahora 4)
                 int ronda_id = i; //saco el numero de ronda con el que filtrar (primero 1, dps 2, etc)
                 Ronda ronda = new Ronda(ronda_id, getNombreFromIdRonda(stmt_temp, ronda_id));
@@ -41,7 +44,7 @@ public class Main {
                     //guardo todos los datos en variables para mejor uso
 
                     Partido partido = new Partido(new Equipo(local), new Equipo(visitante), goles_local, goles_visitante);
-                    print(local+" vs "+visitante+" = "+ partido.resultado); //creo un objeto Partido con todos los datos sacados del RS
+                    print(partido.getLocal().getNombre()+" vs "+partido.getVisitante().getNombre()+" = "+ partido.getResultadoString()); //creo un objeto Partido con todos los datos sacados del RS
 
                     for (String participante: participantes){
                         RESULTADO resultado = null;
@@ -55,11 +58,11 @@ public class Main {
                         } // defino si el id del equipo que el participante eligio ganador es originalmente el local o visitante (o si es 0 empate) y defino un valor enum RESULTADO a una variable
 
                         Pronostico pronostico = new Pronostico(participante, partido, resultado); //creo un objeto pronostico con el nombre del paticipante, el objeto partido del que estamos hablando y el enum resultado
-                        print(pronostico.getParticipante() + ": "+ pronostico.getResultadoString() +" -->> "+ pronostico.acierta); //muestro y veo si el participante acerto
+                        print(pronostico.getParticipante() + ": "+ pronostico.getResultadoString() +" -->> "+ pronostico.isAcertado()); //muestro y veo si el participante acerto
 
 
                         //aumento el valor de los puntos en los Map de puntajes y aciertos, si el resultado coincide
-                        if (pronostico.acierta){
+                        if (pronostico.isAcertado()){
                             aciertos.replace(pronostico.getParticipante(), aciertos.get(pronostico.getParticipante()), aciertos.get(pronostico.getParticipante()) + 1);
                             puntajes.replace(pronostico.getParticipante(), puntajes.get(pronostico.getParticipante()), puntajes.get(pronostico.getParticipante()) + 1);
                         }
@@ -69,59 +72,35 @@ public class Main {
                 }//(termina cada partido de la ronda)
 
                 print("\nAciertos "+aciertos);
-                print("*************************************************************");
-
                 for (String participante: participantes){ // suma un punto extra si el participante acerto todos los resultados de una ronda, cosa que pasa con LUCIANO en la Ronda3
                     if (aciertos.get(participante) == 6){
                         puntajes.replace(participante, puntajes.get(participante), puntajes.get(participante) + 1);
+                        print("punto extra para "+participante+" por acertar todos los resultados de la "+ronda.getNombre());
                     }
                 }
+
+                print("\n*************************************************************");
 
 
                 for (String participante: participantes){
                     aciertos.put(participante, 0); //inicializo devuelta aciertos
                 }
 
-            }//(termina la ronda)
+            }//(termina la ronda) y pasa a la siguiente
 
+            //al final del torneo
+
+            print("Puntajes: "+puntajes);
+            mostrarGanadoryPerdedor(puntajes);
 
         } catch (Exception e) {
             System.out.println(e);
-        }
-
-        print("Puntajes: "+puntajes); //
+        }//fin del torneo
 
     } // FIN MAIN
 
-    public static RESULTADO setResultadoPronostico(String linea) throws IOException {
-        RESULTADO resultado = null;
-        String[] pronostico = linea.split(";");
-        for (int i = 0; i < pronostico.length; i++) {
-            if (pronostico[i].equals("x")) {
-                switch (i) {
-                    case 1:
-                        resultado = RESULTADO.GANADOR_LOCAL;
-                        break;
-                    case 2:
-                        resultado = RESULTADO.EMPATE;
-                        break;
-                    case 3:
-                        resultado = RESULTADO.GANADOR_VISITANTE;
-                        break;
 
-                }
-            }
-        }
-        return resultado;
-    }
 
-    public static void VerRonda(Ronda ronda) {//solo visual
-        System.out.println("org.example.Ronda " + ronda.getNumero());
-        for (Partido partido : ronda.partidos) {
-            System.out.println(partido.getLocal().getNombre() + " vs " + partido.getVisitante().getNombre());
-        }
-        System.out.println("-------------------------------");
-    }
     public static int getNRondas(Statement statement) throws SQLException {
         ResultSet resultSet = statement.executeQuery("SELECT ronda_id FROM ronda");
         int ult_ronda = 0;
@@ -169,6 +148,39 @@ public class Main {
         }
         return id_ganador;
 
+    }
+
+    public static void setParticipantesList (Statement statement, ArrayList<String> lista) throws SQLException {
+        ResultSet rs = statement.executeQuery("SELECT participante FROM pronostico"); //creo lista de participantes desde la DB
+        while(rs.next()){
+            String nombre = rs.getString(1);
+            if (!lista.contains(nombre)){
+                lista.add(nombre);
+            }
+        }
+    }
+
+    public static void mostrarGanadoryPerdedor(HashMap<String,Integer> puntajes){
+        String[] nombres = puntajes.keySet().toArray(new String[0]);
+        Integer max = -1;
+        Integer min = 999999;
+        String ganador = null;
+        String perdedor = null;
+        int i = 0;
+
+        for (Integer puntos: puntajes.values()){
+            if (puntos > max){
+                max = puntos;
+                ganador = nombres[i];
+            }
+            if (puntos < min){
+                min = puntos;
+                perdedor = nombres[i];
+            }
+            i++;
+        }
+
+        print("EL GANADOR FUE: " + ganador + "\nEl PERDEDOR FUE: " + perdedor);
     }
 
 

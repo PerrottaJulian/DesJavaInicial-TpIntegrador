@@ -30,4 +30,14 @@ public class Partido {
     public Equipo getVisitante() {
         return visitante;
     }
+
+    public String getResultadoString(){
+        if (resultado == RESULTADO.GANADOR_LOCAL){
+            return "Gana " + this.getLocal().getNombre();
+        }else if(resultado == RESULTADO.GANADOR_VISITANTE){
+            return "Gana " + this.getVisitante().getNombre();
+        }else{
+            return "Empate";
+        }
+    }
 }

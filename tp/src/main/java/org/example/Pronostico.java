@@ -6,13 +6,13 @@ public class Pronostico {
         this.partido = partido;
         this.resultado = resultado;
         if (partido.resultado == this.resultado){
-            acierta = true;
+            acertado = true;
         }
     }
     private String participante;
     private Partido partido;
     private RESULTADO resultado;
-    public boolean acierta = false;
+    private boolean acertado = false;
 
 
     public Partido getPartido() {
@@ -31,5 +31,10 @@ public class Pronostico {
 
     public String getParticipante() {
         return participante;
+    }
+
+
+    public boolean isAcertado() {
+        return acertado;
     }
 }
